@@ -1,0 +1,4 @@
+scipy
+selenium
+sentence_transformers
+webdriver-manager
