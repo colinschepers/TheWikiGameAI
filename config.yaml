@@ -1,1 +1,9 @@
+group_code: 717693
 language_model_name: distiluse-base-multilingual-cased
+database:
+  host: localhost
+  port: 5432
+  database: wikipedia
+  user: postgres
+  password: password
+  schema: public

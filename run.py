@@ -1,23 +1,25 @@
+import argparse
+
 from wiki_game_ai.crawler import WikiGameCrawler
 from wiki_game_ai.similarity import SimilarityRanker
+from wiki_game_ai.strategies import america_first, depth_first, iddfs, mcts
 
-similarity_ranker = SimilarityRanker()
+CRAWLER = WikiGameCrawler()
+RANKER = SimilarityRanker()
 
-crawler = WikiGameCrawler()
 
-while True:
-    visited = set()
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("strategy", type=str, default="depth_first")
+    args = parser.parse_args()
 
-    crawler.new_game()
-
-    while not crawler.is_game_over:
-        if links := crawler.get_links():
-            texts = [link.text for link in links]
-            results = similarity_ranker.sorted(texts, crawler.goal)
-            print(f"Top 5: {results[:5]}")
-
-            best_result = next(result for result, score in results if result not in visited)
-            visited.add(best_result)
-
-            best_link = next(link for link in links if link.text == best_result)
-            crawler.click(best_link)
+    if args.strategy == "depth_first":
+        depth_first.run(CRAWLER, RANKER)
+    elif args.strategy == "america_first":
+        america_first.run(CRAWLER, RANKER)
+    elif args.strategy == "mcts":
+        mcts.run(CRAWLER, RANKER)
+    elif args.strategy == "iddfs":
+        iddfs.run(CRAWLER, RANKER)
+    else:
+        raise ValueError("Invalid strategy")
